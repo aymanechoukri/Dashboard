@@ -37,7 +37,7 @@ export default function Register() {
     setUsers([...users, { name, email, password }]);
     toast.success("Account created successfully! 🚀");
     window.localStorage.setItem("email", email)
-    naviget("/dashborad")
+    naviget("/dashboard")
 
 
     // Clear form
@@ -124,7 +124,7 @@ export default function Register() {
             >
               Register Now
             </button>
-            <Link to={"/login"}>
+            <Link to={"/"}>
               <p className="text-center mt-6 text-sm text-amber-200">
                 Already have an account?{" "}
                 <span className="underline cursor-pointer hover:text-white transition-colors">

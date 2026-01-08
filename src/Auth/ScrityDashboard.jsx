@@ -8,7 +8,7 @@ export default function SicrtyDashboard() {
 
     useEffect(() => {
         if(!email) {
-            navigate("/login")
+            navigate("/")
         }
     }, [email, navigate]);
 
@@ -16,5 +16,5 @@ export default function SicrtyDashboard() {
         return null;
     }
 
-    return <Dashboard />
+    return <Dashboard />;
 }
