@@ -17,7 +17,7 @@ export default function App() {
 
           <Route path="dashboard" element={<SicrtyDashboard> <Dashboard /> </SicrtyDashboard>} >
             <Route path="users" element={<Users />} />
-            <Route path=":index" element={<EditeUsers />} />
+            <Route path=":id" element={<EditeUsers />} />
           </Route>
         </Routes>
       </UserProvider>

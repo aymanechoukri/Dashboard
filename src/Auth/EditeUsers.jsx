@@ -1,20 +1,34 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useUser } from "../Context/UserContext";
 import { useNavigate } from "react-router-dom";
+import { motion as M } from "motion/react";
+
 
 export default function EditeUsers() {
   const [forms, setForm] = useState({
+    name: "",
     email: "",
     password: "",
   });
+  const { users, setUsers } = useUser();
+  const naviget = useNavigate();
+  const id = location.pathname.split("/").slice(-1)[0];
+
+  useEffect(() => {
+    const userToEdit = users.find((user) => user.id === id);
+    if (userToEdit) {
+      setForm({
+        name: userToEdit.name,
+        email: userToEdit.email,
+        password: userToEdit.password,
+      });
+    }
+  }, [id, users]);
   const handlChange = (e) => {
     setForm({ ...forms, [e.target.name]: e.target.value });
   };
-  const { users, setUsers } = useUser();
-  const naviget = useNavigate()
 
- 
   const handlSubmit = (e) => {
     e.preventDefault();
     const { name, email, password } = forms;
@@ -24,14 +38,14 @@ export default function EditeUsers() {
     if (password.length < 8)
       return toast.error("Password must be at least 8 characters");
 
-
-
     // Success Logic
-    setUsers([...users, { name, email, password }]);
-    toast.success("Account created successfully! 🚀");
-    window.localStorage.setItem("email", email)
-    naviget("/dashboard/users")
-
+    setUsers(
+      users.map((user) =>
+        user.id === id ? { ...user, name, email, password } : user
+      )
+    );
+    toast.success("Account updated successfully! 🚀");
+    naviget("/dashboard/users");
 
     // Clear form
     setForm({ name: "", email: "", password: "" });
@@ -39,8 +53,11 @@ export default function EditeUsers() {
 
   return (
     <div className="w-full">
-      <form
-      onSubmit={handlSubmit}
+      <M.form
+        initial={{opacity: 0}}
+        animate={{opacity: 1}}
+        transition={{duration: 0.6}}
+        onSubmit={handlSubmit}
         noValidate //
         className="flex flex-col  w-[90%] text-black mt-15"
       >
@@ -93,7 +110,7 @@ export default function EditeUsers() {
         >
           Up Date Now
         </button>
-      </form>
+      </M.form>
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Link, useNavigate } from "react-router-dom";
 import { motion as M } from "motion/react";
+import { v4 as uuidv4 } from "uuid";
 
 export default function Register() {
   const [forms, setForm] = useState({
@@ -12,7 +13,7 @@ export default function Register() {
     password: "",
   });
   const { users, setUsers } = useUser();
-  const naviget = useNavigate()
+  const naviget = useNavigate();
 
   const handlChange = (e) => {
     setForm({ ...forms, [e.target.name]: e.target.value });
@@ -34,11 +35,10 @@ export default function Register() {
     }
 
     // Success Logic
-    setUsers([...users, { name, email, password }]);
+    setUsers([...users, { id: uuidv4(), name, email, password }]);
     toast.success("Account created successfully! 🚀");
-    window.localStorage.setItem("email", email)
-    naviget("/dashboard")
-
+    window.localStorage.setItem("email", email);
+    naviget("/dashboard");
 
     // Clear form
     setForm({ name: "", email: "", password: "" });
