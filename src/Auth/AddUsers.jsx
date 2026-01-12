@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
+import { useState } from "react";
 import { useUser } from "../Context/UserContext";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { motion as M } from "motion/react";
+import { v4 as uuidv4 } from "uuid";
 import { useTheme } from "../Context/ThemeContext";
 
-export default function EditeUsers() {
+export default function AddUsers() {
   const [forms, setForm] = useState({
     name: "",
     email: "",
@@ -13,19 +15,7 @@ export default function EditeUsers() {
   });
   const { users, setUsers } = useUser();
   const naviget = useNavigate();
-  const { theme } = useTheme();
-  const id = location.pathname.split("/").slice(-1)[0];
 
-  useEffect(() => {
-    const userToEdit = users.find((user) => user.id === id);
-    if (userToEdit) {
-      setForm({
-        name: userToEdit.name,
-        email: userToEdit.email,
-        password: userToEdit.password,
-      });
-    }
-  }, [id, users]);
   const handlChange = (e) => {
     setForm({ ...forms, [e.target.name]: e.target.value });
   };
@@ -39,21 +29,24 @@ export default function EditeUsers() {
     if (password.length < 8)
       return toast.error("Password must be at least 8 characters");
 
+    const validEmail = users.find((u) => u.email === email);
+
+    if (validEmail) {
+      return toast.error("This account exists");
+    }
+
     // Success Logic
-    setUsers(
-      users.map((user) =>
-        user.id === id ? { ...user, name, email, password } : user
-      )
-    );
-    toast.success("Account updated successfully! 🚀");
+    setUsers([...users, { id: uuidv4(), name, email, password }]);
+    toast.success("Account created successfully! 🚀");
     naviget("/dashboard/users");
 
     // Clear form
     setForm({ name: "", email: "", password: "" });
   };
+  const { theme } = useTheme()
 
   return (
-    <div className="w-full">
+   <div className="w-full">
       <ToastContainer position="top-right" autoClose={3000} />
       <M.form
         initial={{ opacity: 0 }}
@@ -70,7 +63,7 @@ export default function EditeUsers() {
             theme ? "bg-white" : "text-white"
           }`}
         >
-          Up date
+          Add user
         </h2>
         <div className="space-y-4">
           <div className="flex flex-col gap-1">
@@ -114,7 +107,7 @@ export default function EditeUsers() {
           type="submit"
           className="mt-8 bg-green-500 hover:bg-green-600 text-white font-bold py-4 rounded-xl shadow-lg transform transition-all active:scale-95 cursor-pointer"
         >
-          Up Date Now
+          Add user Now
         </button>
       </M.form>
     </div>
